@@ -1,6 +1,6 @@
 # GettextRedact
 
-**TODO: Add description**
+Turns "blah blah blah" into "████ ████ ████" in your .po files
 
 ## Installation
 
@@ -10,7 +10,7 @@ by adding `gettext_redact` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:gettext_redact, "~> 0.1.0"}
+    {:gettext_redact, "~> 0.0.0"}
   ]
 end
 ```
