@@ -25,3 +25,4 @@ gettext_redact-*.tar
 # Temporary files, for example, from tests.
 /tmp/
 test/tmp/
+test/fixtures/gettext/rr
