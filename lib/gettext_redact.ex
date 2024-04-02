@@ -32,8 +32,7 @@ defmodule GettextRedact do
 
   def redact_span({text, :replace}) do
     String.split(text, "", trim: true)
-    |> Enum.map(fn char -> if skip_redacting?(char), do: char, else: erase() end)
-    |> Enum.join("")
+    |> Enum.map_join("", fn char -> if skip_redacting?(char), do: char, else: erase() end)
   end
 
   @type span() :: {open :: pos_integer(), close :: pos_integer(), stance :: :keep | :replace}
@@ -54,7 +53,6 @@ defmodule GettextRedact do
   def split_spans(text, ranges, cursor \\ 0, acc \\ [])
 
   def split_spans(text, [], cursor, spans) do
-    [end: cursor, l: String.length(text)]
     [[{String.slice(text, cursor, String.length(text) - cursor), :replace}] | spans]
   end
 
