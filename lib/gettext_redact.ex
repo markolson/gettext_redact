@@ -16,6 +16,16 @@ defmodule GettextRedact do
   # TODO - tighten up
   @spec redact(map()) :: map()
 
+  def run(_opts \\ []) do
+    pots()
+    |> Enum.map(&read_pot/1)
+    |> Enum.map(fn {po_name, contents} ->
+      redact(contents) |> write_po(po_name)
+    end)
+
+    :ok
+  end
+
   def redact(%Expo.Messages{messages: m} = po_contents) do
     %Expo.Messages{po_contents | messages: Enum.map(m, &redact/1)}
   end
@@ -72,12 +82,16 @@ defmodule GettextRedact do
     split_spans(text, following_ranges, open + run, [[keep, do_redact(replace)] | spans])
   end
 
-  @spec read_po(Path.t()) :: Expo.Messages.t()
-  def read_po(path), do: Expo.PO.parse_file!(path)
+  @spec read_pot(Path.t()) :: {String.t(), Expo.Messages.t()}
+  def read_pot(path), do: {Path.basename(path, ".pot"), Expo.PO.parse_file!(path)}
 
   @spec write_po(Expo.PO.t(), Path.t()) :: boolean()
-  def write_po(po_contents, path) do
-    Expo.PO.compose(po_contents) |> then(&File.write!(path, &1))
+  def write_po(po_contents, pot_name) do
+    write_dir = Path.join(path(), lang())
+    unless File.dir?(write_dir), do: File.mkdir(write_dir)
+
+    Expo.PO.compose(po_contents)
+    |> then(&File.write!(Path.join(write_dir, pot_name <> ".po"), &1))
   end
 
   @spec erase(any()) :: char()
@@ -94,6 +108,13 @@ defmodule GettextRedact do
     char in List.wrap(Application.get_env(:gettext_redact, :skip, @redaction_skips))
   end
 
-  defp pot_path, do: Application.get_env(:gettext_redact, :path, "priv/gettext")
+  def pots() do
+    path()
+    |> File.ls!()
+    |> Enum.filter(&String.ends_with?(&1, ".pot"))
+    |> Enum.map(&Path.join(path(), &1))
+  end
+
+  defp path, do: Application.get_env(:gettext_redact, :path, "test/fixtures/gettext")
   defp lang, do: Application.get_env(:gettext_redact, :lang, @locale)
 end
