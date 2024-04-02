@@ -30,11 +30,34 @@ defmodule GettextRedact do
     |> Enum.join()
   end
 
-  @type span() :: {Range.t(), :keep | :replace}
-  @spec get_spans(String.t()) :: [span()]
+  @type span() :: {open :: pos_integer(), close :: pos_integer(), stance :: :keep | :replace}
+  @spec get_spans(text :: String.t()) :: [span()]
 
   def get_spans(text) do
-    interpolated_ranges = Regex.scan(@interpolation_regex, text, return: :index)
+    interpolated_ranges = Regex.scan(@interpolation_regex, text, return: :index) |> dbg
+    split_spans(text, interpolated_ranges) |> List.flatten() |> Enum.reverse()
+  end
+
+  @spec split_spans(
+          text :: String.t(),
+          interpolated_ranges :: list(),
+          cursor :: pos_integer(),
+          list[span()] | []
+        ) :: list[span()]
+
+  def split_spans(text, ranges, cursor \\ 0, acc \\ [])
+
+  def split_spans(text, [], cursor, spans) do
+    [end: cursor, l: String.length(text)]
+    [[{String.slice(text, cursor, String.length(text) - cursor), :replace}] | spans]
+  end
+
+  def split_spans(text, [[{open, run}] | following_ranges], cursor, spans) do
+    {cursor, open, run}
+    replace = String.slice(text, cursor, open - cursor)
+    keep = String.slice(text, open, run)
+
+    split_spans(text, following_ranges, open + run, [[{keep, :keep}, {replace, :replace}] | spans])
   end
 
   @spec pot_path() :: String.t()
