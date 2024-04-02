@@ -11,3 +11,10 @@ GettextRedact.get_spans("Hi There %{name}!!! How are you %{today}? Ok.")
 
 iex(133)> GettextRedact.redact("Hi There %{name}!!! How are you %{today}? Ok.")
 "██ █████ %{name}███ ███ ███ ███ %{today}█ ███"
+
+GettextRedact.read_po("test/fixtures/gettext/default.pot")
+s = hd(GettextRedact.read_po("test/fixtures/gettext/default.pot").messages)
+
+# Use Map.put?
+
+GettextRedact.read_po("test/fixtures/gettext/default.pot") |> GettextRedact.redact |> Expo.PO.compose |> then(&File.write("test/tmp/default.po", &1))
