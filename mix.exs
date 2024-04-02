@@ -19,6 +19,7 @@ defmodule GettextRedact.MixProject do
 
   defp deps do
     [
+      {:credo, "~> 1.7", only: [:dev]},
       {:gettext, "~> 0.24"}
     ]
   end

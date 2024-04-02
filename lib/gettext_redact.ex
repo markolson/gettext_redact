@@ -1,11 +1,14 @@
 defmodule GettextRedact do
-  @doc "Erase your gettext"
+  @moduledoc """
+    All the marbles.
+  """
+
   @eraser "█"
   @redaction_skips [" ", "!", "-", ",", "."]
   @interpolation_regex ~r/%\{[^}\s]+\}/
 
-  @spec redact(%Expo.Message.Singular{}) :: %Expo.Message.Singular{}
-  @spec redact(%Expo.Message.Plural{}) :: %Expo.Message.Plural{}
+  @spec redact(Expo.Message.Singular.t()) :: Expo.Message.Singular.t()
+  @spec redact(Expo.Message.Plural.t()) :: Expo.Message.Plural.t()
   @spec redact(String.t()) :: String.t()
 
   def redact(%Expo.Message.Singular{} = msg) do
