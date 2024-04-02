@@ -17,4 +17,4 @@ s = hd(GettextRedact.read_po("test/fixtures/gettext/default.pot").messages)
 
 # Use Map.put?
 
-GettextRedact.read_po("test/fixtures/gettext/default.pot") |> GettextRedact.redact |> Expo.PO.compose |> then(&File.write("test/tmp/default.po", &1))
+GettextRedact.read_po("test/fixtures/gettext/default.pot") |> GettextRedact.redact |> Expo.PO.compose |> then(&File.write("test/tmp/pirate.po", &1))
