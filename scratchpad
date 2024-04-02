@@ -8,3 +8,6 @@ Regex.scan(~r/%\{[^}\s]+\}/, "hi there %{a} face", return: :index)
 [[{9, 4}]]
 
 GettextRedact.get_spans("Hi There %{name}!!! How are you %{today}? Ok.")
+
+iex(133)> GettextRedact.redact("Hi There %{name}!!! How are you %{today}? Ok.")
+"██ █████ %{name}███ ███ ███ ███ %{today}█ ███"

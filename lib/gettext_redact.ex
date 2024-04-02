@@ -4,7 +4,8 @@ defmodule GettextRedact do
   """
 
   @eraser "█"
-  @redaction_skips [" ", "!", "-", ",", "."]
+  # @redaction_skips [" ", "!", "-", ",", "."]
+  @redaction_skips [" "]
   @interpolation_regex ~r/%\{[^}\s]+\}/
 
   @spec redact(Expo.Message.Singular.t()) :: Expo.Message.Singular.t()
@@ -21,20 +22,25 @@ defmodule GettextRedact do
   end
 
   def redact(text) when is_binary(text) do
-    String.split(text, "", trim: true)
-    |> Enum.reduce([], fn char, acc ->
-      char = if skip_redacting?(char), do: char, else: erase()
-      [char | acc]
-    end)
+    get_spans(text)
+    |> Enum.reduce([], fn span, acc -> [redact_span(span) | acc] end)
     |> Enum.reverse()
     |> Enum.join()
+  end
+
+  def redact_span({text, :keep}), do: text
+
+  def redact_span({text, :replace}) do
+    String.split(text, "", trim: true)
+    |> Enum.map(fn char -> if skip_redacting?(char), do: char, else: erase() end)
+    |> Enum.join("")
   end
 
   @type span() :: {open :: pos_integer(), close :: pos_integer(), stance :: :keep | :replace}
   @spec get_spans(text :: String.t()) :: [span()]
 
   def get_spans(text) do
-    interpolated_ranges = Regex.scan(@interpolation_regex, text, return: :index) |> dbg
+    interpolated_ranges = Regex.scan(@interpolation_regex, text, return: :index)
     split_spans(text, interpolated_ranges) |> List.flatten() |> Enum.reverse()
   end
 
