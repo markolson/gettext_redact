@@ -1,0 +1,2 @@
+msgid "Hello, I am a sample string in another domain"
+msgstr ""

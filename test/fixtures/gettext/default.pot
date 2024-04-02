@@ -1,0 +1,25 @@
+## This file is a PO Template file. 
+## The above comment should stay.
+
+msgid ""
+msgstr ""
+
+"Plural-Forms: nplurals=2; plural=n != 1;"
+
+#, elixir-autogen, elixir-format
+msgid "Hello, I am a sample string"
+msgstr ""
+
+#, elixir-autogen, elixir-format
+msgid "Whoa! %{blank} <- Single Interpolation"
+msgstr ""
+
+#, elixir-autogen, elixir-format
+msgid "Dang! %{blank}ity %{beep} <- Double Interpolation"
+msgstr ""
+
+#, elixir-autogen, elixir-format
+msgid "I can translate %{count} message"
+msgid_plural "I can translate %{count} messages"
+msgstr[0] ""
+msgstr[1] ""

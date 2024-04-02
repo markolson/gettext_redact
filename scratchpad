@@ -1,0 +1,5 @@
+
+o = Expo.PO.parse_file!("test/fixtures/gettext/other_domain.pot")
+d = Expo.PO.parse_file!("test/fixtures/gettext/default.pot")
+
+GettextRedact.redact("Hi There!")
